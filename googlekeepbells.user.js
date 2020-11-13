@@ -19,12 +19,10 @@ function addGlobalStyle(css) {
    head.appendChild(style);
 }
 
-$(document).ready(function() {
-    setTimeout(function() {
-        $(".IZ65Hb-MPu53c").click(function() { //class name from google keep checkboxes           
-            let mCoinSound = new Audio("https://www.mboxdrive.com/checksound.mp3"); //externally hosted audio file of checkmark
+document.addEventListener( 'mousedown', function ( event ) {
+  if( event.srcElement.classList.contains('IZ65Hb-MPu53c') ) {
+            let mCoinSound = new Audio("https://www.mboxdrive.com/checksound.mp3");
             mCoinSound.volume = .35;
             mCoinSound.play();
-        });
-    }, 10000); //wait because some elements (checklists) take a long time to load from Google.
-});
+  };
+} );
