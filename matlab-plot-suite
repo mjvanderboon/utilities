@@ -1,0 +1,17 @@
+## Standard
+set(groot, 'defaultTextInterpreter', 'latex');
+set(groot, 'defaultAxesTickLabelInterpreter','latex'); set(groot, 'defaultLegendInterpreter','latex');
+set(groot, 'DefaultLineLineWidth', 2);
+set(groot, 'DefaultLegendFontSize', 14);
+set(groot, 'DefaultAxesFontSize', 14);
+set(gca, 'FontSize', 14);
+
+# Per graph
+fig = figure();
+hold on;
+grid;
+ylabel('y', 'FontSize', 14)
+xlabel('x', 'FontSize', 14)
+
+
+hold off;
