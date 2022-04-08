@@ -1,0 +1,112 @@
+clc;
+close all;
+
+%% Parameters
+folder = input('folder name ?', 's');
+dt = 0.02;
+
+
+%% Do not change below
+set(groot, 'defaultTextInterpreter', 'latex');
+set(groot, 'defaultAxesTickLabelInterpreter','latex'); set(groot, 'defaultLegendInterpreter','latex');
+set(0, 'DefaultLineLineWidth', 2);
+
+all_files = dir(folder);
+
+dirname = strcat(folder, filesep, 'output_plots');
+
+if ~exist(dirname, 'dir')
+    mkdir(dirname)
+end
+% 
+start_index = 1;
+end_index = 567;
+
+for i = 3:1:length(all_files)
+    disp(all_files(i).name);
+    
+    %% Ask for input    
+    % ask to do or skip this one
+    do = input('do: 1, skip: 0 ');
+    if do == 0
+        continue
+    end
+    
+    %xlabel_of_plot = input('xlabel? ', 's')
+    ylabel_of_plot = input('ylabel? ', 's')
+    title_of_plot = input('title? ', 's')
+    filename_of_plot = input('filename?', 's')
+    y_max = input('y-max?')
+    y_min = input('y-min?')
+    
+    disp('Importing file...')
+    
+    %% Set up the Import Options and import the data
+    opts = delimitedTextImportOptions("NumVariables", 3);
+
+    % Specify range and delimiter
+    opts.DataLines = [2, Inf];
+    opts.Delimiter = ",";
+
+    % Specify column names and types
+    opts.VariableNames = ["WallTime", "Step", "Value"];
+    opts.VariableTypes = ["double", "double", "double"];
+
+    % Specify file level properties
+    opts.ExtraColumnsRule = "ignore";
+    opts.EmptyLineRule = "read";
+
+    % Import the data
+    tbl = readtable(strcat(all_files(i).folder, filesep, all_files(i).name), opts);
+
+     %% Convert to output type
+     wall_time = tbl.WallTime;
+     step = tbl.Step;
+     value = tbl.Value;
+     
+    wall_time = wall_time(start_index:end_index);
+    step = step(start_index:end_index);
+    value = value(start_index:end_index);
+
+    %% Clear temporary variables
+    clear opts tbl
+    
+    %% Plot data    
+    time = step * dt;
+    relative_wall_time = wall_time - wall_time(1); % Training time in seconds since start of episode   
+    
+    % Training data
+    f = figure(i)
+    plot(relative_wall_time / 60, value)
+    xlabel('time (min)')
+%     plot(time, value)
+%     xlabel('time (s)','FontSize', 14)
+    %ylabel('\boldmath{$p$}');
+    ylabel(ylabel_of_plot,'FontSize', 14);
+    title(title_of_plot,'FontSize', 14);
+    ylim([y_min, y_max]);
+    grid;
+    
+    % Save figure
+    saveas(f, strcat(folder, filesep, 'output_plots', filesep, filename_of_plot, '.png'))
+    
+    %% Clearing data of this csv
+    clear step wall_time value
+end
+
+
+
+% 
+% 
+% 
+% dt = 0.02
+% time = step * dt
+% training_time = wall_time - wall_time(1)
+% 
+% % Training data
+% figure()
+% plot(training_time / 50, value)
+% xlabel('time (minutes)')
+% ylabel('blabla (blabla)')
+% title('blablalba')
+% grid
